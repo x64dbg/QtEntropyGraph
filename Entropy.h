@@ -45,6 +45,24 @@ public:
         return MeasureData(block, blockSize);
     }
 
+    static void MeasurePoints(const unsigned char* data, int dataSize, int blockSize, std::vector<double> & points, int pointCount)
+    {
+        points.clear();
+        if(dataSize < pointCount)
+            return;
+        if(dataSize < pointCount)
+            return;
+        if(dataSize % pointCount != 0)
+            pointCount += dataSize % pointCount;
+
+        unsigned char* block = new unsigned char[blockSize];
+        int interval = dataSize / pointCount;
+        points.reserve(pointCount);
+        for(int i = 0; i < dataSize; i += interval)
+            points.push_back(MeasureByte(data, dataSize, i, block, blockSize));
+        delete[] block;
+    }
+
     static void Average(const std::vector<double> & data, std::vector<double> & points, int pointCount)
     {
         points.clear();

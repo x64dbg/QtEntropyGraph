@@ -166,8 +166,6 @@ void MainWindow::on_sliderBlockSize_sliderMoved(int position)
 void MainWindow::on_sliderPointCount_sliderMoved(int position)
 {
     std::vector<double> points;
-    if(position == ui->sliderPointCount->maximum())
-        position = (int)_entropyData.size();
     ui->editPointCount->setText(QString("%1").arg(position));
     MakeEnropyGraph(_entropyData, points, position);
     on_btnClear_clicked();
