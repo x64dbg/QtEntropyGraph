@@ -30,6 +30,9 @@ private:
     bool _initialized;
     QRectF _rect;
     std::vector<double> _entropyData;
+    qreal _yMin;
+    qreal _yMax;
+    int _size;
 };
 
 #endif // MAINWINDOW_H

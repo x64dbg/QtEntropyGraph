@@ -2,6 +2,7 @@
 #define ENTROPY_H
 
 #include <cmath>
+#include <vector>
 
 class Entropy
 {
@@ -44,27 +45,20 @@ public:
         return MeasureData(block, blockSize);
     }
 
-    static void Average(const double* data, int dataSize, double* out, int outSize)
+    static void Average(const std::vector<double> & data, std::vector<double> & points, int pointCount)
     {
-        if(dataSize < outSize)
+        points.clear();
+
+        int dataSize = (int)data.size();
+        if(dataSize < pointCount)
             return;
-        int blockSize = dataSize / outSize;
-        for (int i = 0, j = 0; i < dataSize;)
-        {
-            double sum = 0.0;
-            int count = 0;
-            int end = i + blockSize;
-            for (; i < dataSize && i < end; i++)
-            {
-                sum += data[i];
-                count++;
-            }
-            double avg = sum / (double)count;
-            if(j < outSize)
-                out[j++] = avg;
-            else
-                out[j - 1] = (out[j - 1] + avg) / 2;
-        }
+        if(dataSize % pointCount != 0)
+            pointCount += dataSize % pointCount;
+
+        int blockSize = dataSize / pointCount;
+        points.reserve(pointCount);
+        for(int i = 0; i < dataSize; i += blockSize)
+                points.push_back(data[i]);
     }
 };
 

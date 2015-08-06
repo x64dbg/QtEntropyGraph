@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>926</width>
-    <height>316</height>
+    <width>1011</width>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>907</width>
-      <height>272</height>
+      <width>991</width>
+      <height>321</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -29,6 +29,9 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="layoutPath">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
        <item>
         <widget class="QLabel" name="labelPath">
          <property name="text">
@@ -47,6 +50,9 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
        <item>
         <widget class="QPushButton" name="btnRandomGraph">
          <property name="text">
@@ -69,36 +75,88 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="layoutBlockSize">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
-          <widget class="QLabel" name="labelBlockSize">
-           <property name="text">
-            <string>Block Size:</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="layoutBlockSize">
+           <item>
+            <widget class="QLabel" name="labelBlockSize">
+             <property name="text">
+              <string>Block Size:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="editBlockSize">
+             <property name="text">
+              <string>256</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QLineEdit" name="editBlockSize">
-           <property name="text">
-            <string>256</string>
+          <widget class="QSlider" name="sliderBlockSize">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>2</number>
+           </property>
+           <property name="maximum">
+            <number>1024</number>
+           </property>
+           <property name="value">
+            <number>256</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="layoutPointCount">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
-          <widget class="QLabel" name="labelPointCount">
-           <property name="text">
-            <string>Point Count:</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="layoutPointCount">
+           <item>
+            <widget class="QLabel" name="labelPointCount">
+             <property name="text">
+              <string>Point Count:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="editPointCount">
+             <property name="text">
+              <string>300</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QLineEdit" name="editPointCount">
-           <property name="text">
-            <string>300</string>
+          <widget class="QSlider" name="sliderPointCount">
+           <property name="minimum">
+            <number>10</number>
+           </property>
+           <property name="maximum">
+            <number>500</number>
+           </property>
+           <property name="value">
+            <number>300</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
@@ -106,6 +164,9 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="layoutColor">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
           <widget class="QLabel" name="labelColor">
            <property name="text">
@@ -128,63 +189,6 @@
         </layout>
        </item>
       </layout>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>280</y>
-      <width>371</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QSlider" name="sliderBlockSize">
-       <property name="minimum">
-        <number>2</number>
-       </property>
-       <property name="maximum">
-        <number>4096</number>
-       </property>
-       <property name="value">
-        <number>256</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QSlider" name="sliderPointCount">
-       <property name="minimum">
-        <number>10</number>
-       </property>
-       <property name="maximum">
-        <number>5000</number>
-       </property>
-       <property name="value">
-        <number>300</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
      </item>
     </layout>
    </widget>
