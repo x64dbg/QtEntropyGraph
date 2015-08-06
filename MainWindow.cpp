@@ -12,42 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _initialized = false;
 }
 
-class PointItem : public QGraphicsItem
-{
-public:
-    explicit PointItem(QPointF point, QColor color, int size)
-        : _point(point),
-          _color(color),
-          _size(size)
-    {
-        _rect = QRectF(_point.x() - _size / 2, _point.y() - _size / 2, _size, _size);
-    }
-
-    QRectF boundingRect() const
-    {
-        return _rect;
-    }
-
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
-    {
-        Q_UNUSED(option);
-        Q_UNUSED(widget);
-        painter->setPen(_color);
-        painter->drawRect(_rect);
-    }
-
-private:
-    QPointF _point;
-    QColor _color;
-    int _size;
-    QRectF _rect;
-};
-
-static void AddPoint(QGraphicsScene* scene, QPointF point, QColor color = Qt::black, int size = 4)
-{
-    scene->addItem(new PointItem(point, color, size));
-}
-
 static void AddGraph(QGraphicsScene* scene, QRectF rect, const QList<double> & points, QColor color = Qt::black, int size = 1, qreal yMin = 0, qreal yMax = 1)
 {
     int pointCount = points.size();
@@ -62,7 +26,6 @@ static void AddGraph(QGraphicsScene* scene, QRectF rect, const QList<double> & p
         qreal y = points[i] * intervalY + rect.y();
         QPointF point(x, y);
         polyLine.append(point);
-        //AddPoint(scene, point, color, size * 2);
     }
     QPainterPath path;
     path.addPolygon(polyLine);
@@ -135,24 +98,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-static double fRand(double fMin = 0, double fMax = 1)
+static QColor randomColor()
 {
-    double f = (double)rand() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
-}
-
-static QColor randomColor(QColor mix = Qt::white)
-{
-    /*int r = (rand() % 256 + mix.red()) / 2;
-    int g = (rand() % 256 + mix.green()) / 2;
-    int b = (rand() % 256 + mix.blue()) / 2;
-    return QColor(r, g, b);*/
     return QColor(rand() % 256, rand() % 256, rand() % 256);
 }
 
 void MainWindow::nextColor()
 {
     ui->editColor->setText(randomColor().name());
+}
+
+static double fRand(double fMin = 0, double fMax = 1)
+{
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
 }
 
 void MainWindow::on_btnRandomGraph_clicked()
