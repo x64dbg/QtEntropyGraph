@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <vector>
 
 namespace Ui {
 class MainWindow;
@@ -20,13 +21,15 @@ public:
 private slots:
     void on_btnRandomGraph_clicked();
     void on_btnGraphEntropy_clicked();
-
     void on_btnClear_clicked();
+    void on_sliderBlockSize_sliderMoved(int position);
+    void on_sliderPointCount_sliderMoved(int position);
 
 private:
     Ui::MainWindow *ui;
     bool _initialized;
     QRectF _rect;
+    std::vector<double> _entropyData;
 };
 
 #endif // MAINWINDOW_H

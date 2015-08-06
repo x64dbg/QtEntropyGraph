@@ -69,9 +69,9 @@ static void AddGraph(QGraphicsScene* scene, QRectF rect, const QList<double> & p
     scene->addPath(path, QPen(color, size));
 }
 
-static void GetFileEntropy(const QString & fileName, QList<double> & points, int blockSize = 256, int pointCount = 50)
+static void GetFileEntropy(const QString & fileName, std::vector<double> & entropyData, int blockSize)
 {
-    points.clear();
+    entropyData.clear();
 
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly))
@@ -82,29 +82,31 @@ static void GetFileEntropy(const QString & fileName, QList<double> & points, int
 
     unsigned char* data = (unsigned char*)fileData.constData();
     int dataSize = fileData.size();
-    double* pointData = new double[pointCount];
-    double* entropyData = new double[dataSize];
     unsigned char* block = new unsigned char[blockSize];
 
+    entropyData.reserve(dataSize);
     for(int i=0; i<dataSize; i++)
-        entropyData[i] = Entropy::MeasureByte(data, dataSize, i, block, blockSize);
+        entropyData.push_back(Entropy::MeasureByte(data, dataSize, i, block, blockSize));
 
-    if(pointCount < dataSize)
+    delete[] block;
+}
+
+static void MakeEnropyGraph(const std::vector<double> & entropyData, QList<double> & points, int pointCount)
+{
+    if(pointCount < (int)entropyData.size())
     {
-        Entropy::Average(entropyData, dataSize, pointData, pointCount);
+        double* pointData = new double[pointCount];
+        Entropy::Average(entropyData.data(), entropyData.size(), pointData, pointCount);
 
         for(int i=0; i<pointCount; i++)
             points.append(pointData[i]);
+        delete[] pointData;
     }
     else
     {
-        for(int i=0; i<dataSize; i++)
+        for(int i=0; i<(int)entropyData.size(); i++)
             points.append(entropyData[i]);
     }
-
-    delete[] block;
-    delete[] entropyData;
-    delete[] pointData;
 }
 
 void MainWindow::initializeGraph()
@@ -175,8 +177,10 @@ void MainWindow::on_btnGraphEntropy_clicked()
     int blockSize = ui->editBlockSize->text().toInt();
     int pointCount = ui->editPointCount->text().toInt();
 
-    GetFileEntropy(ui->editPath->text(), points, blockSize, pointCount);
+    GetFileEntropy(ui->editPath->text(), _entropyData, blockSize);
+    MakeEnropyGraph(_entropyData, points, pointCount);
     AddGraph(ui->graphicsView->scene(), _rect, points, QColor(ui->editColor->text()));
+    ui->sliderPointCount->setMaximum(_entropyData.size());
 
     nextColor();
 }
@@ -185,4 +189,20 @@ void MainWindow::on_btnClear_clicked()
 {
     _initialized = false;
     initializeGraph();
+}
+
+void MainWindow::on_sliderBlockSize_sliderMoved(int position)
+{
+    ui->editBlockSize->setText(QString("%1").arg(position));
+    on_btnClear_clicked();
+    on_btnGraphEntropy_clicked();
+}
+
+void MainWindow::on_sliderPointCount_sliderMoved(int position)
+{
+    QList<double> points;
+    ui->editPointCount->setText(QString("%1").arg(position));
+    MakeEnropyGraph(_entropyData, points, position);
+    on_btnClear_clicked();
+    AddGraph(ui->graphicsView->scene(), _rect, points, QColor(ui->editColor->text()));
 }
