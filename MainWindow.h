@@ -29,10 +29,6 @@ private slots:
 private:
     Ui::MainWindow* ui;
     bool _initialized;
-    QRectF _rect;
-    qreal _yMin;
-    qreal _yMax;
-    int _size;
 };
 
 #endif // MAINWINDOW_H

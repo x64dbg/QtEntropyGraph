@@ -12,75 +12,12 @@ MainWindow::MainWindow(QWidget* parent) :
     _initialized = false;
 }
 
-static void AddGraph(QGraphicsScene* scene, QRectF rect, const std::vector<double> & points, QColor color = Qt::black, int size = 1, qreal yMin = 0, qreal yMax = 1)
-{
-    int pointCount = points.size();
-    if(!pointCount)
-        return;
-    qreal intervalX = rect.width() / ((qreal)pointCount - 1);
-    qreal intervalY = rect.height() / (yMax - yMin);
-    QPolygonF polyLine;
-    for(int i = 0; i < pointCount; i++)
-    {
-        qreal x = i * intervalX;
-        qreal y = points[i] * intervalY;
-        QPointF point(rect.x() + x, rect.bottom() - y); //y direction is inverted...
-        polyLine.append(point);
-    }
-    QPainterPath path;
-    path.addPolygon(polyLine);
-    scene->addPath(path, QPen(color, size));
-}
-
-static void GetFileEntropyGraph(const QString & fileName, int blockSize, std::vector<double> & points, int pointCount)
-{
-    QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly))
-        return;
-
-    QByteArray fileData = file.readAll();
-    file.close();
-
-    unsigned char* data = (unsigned char*)fileData.constData();
-    int dataSize = fileData.size();
-    if(blockSize > dataSize)
-        blockSize = dataSize;
-
-    Entropy::MeasurePoints(data, dataSize, blockSize, points, pointCount);
-}
-
 void MainWindow::initializeGraph()
 {
     if(_initialized)
         return;
     _initialized = true;
-
-    //initialize scene
-    QGraphicsScene* scene = new QGraphicsScene(this);
-    qreal width = ui->graphicsView->width() - 5;
-    qreal height = ui->graphicsView->height() - 5;
-    _rect = QRectF(25, 10, width - 35, height - 20);
-    _yMin = 0;
-    _yMax = 1;
-    _size = 1;
-
-    //draw bounding box
-    scene->addRect(QRectF(1, 1, width, height), QPen(Qt::black));
-
-    //draw scale
-    scene->addLine(15, _rect.top(), 15, _rect.bottom(), QPen(Qt::black, 2));
-    const int xBegin = 10;
-    const int xEnd = 20;
-    qreal intervalY = _rect.height() / 10;
-    for(int i = 0; i < 11; i++)
-    {
-        qreal y = _rect.top() + i * intervalY;
-        scene->addLine(xBegin, y, xEnd, y, QPen(Qt::black, 2));
-    }
-
-    //set scene
-    ui->graphicsView->setRenderHints(QPainter::Antialiasing);
-    ui->graphicsView->setScene(scene);
+    ui->entropyView->InitializeGraph();
 }
 
 MainWindow::~MainWindow()
@@ -115,7 +52,7 @@ void MainWindow::on_btnRandomGraph_clicked()
         points.push_back(fRand(fRand(), fRand()));
     points[0] = 0;
     points[points.size() - 1] = 1;
-    AddGraph(ui->graphicsView->scene(), _rect, points, QColor(ui->editColor->text()), _size, _yMin, _yMax);
+    ui->entropyView->AddGraph(points, QColor(ui->editColor->text()));
 
     nextColor();
 }
@@ -124,11 +61,9 @@ void MainWindow::on_btnGraphEntropy_clicked()
 {
     initializeGraph();
 
-    std::vector<double> points;
     int blockSize = ui->editBlockSize->text().toInt();
     int pointCount = ui->editPointCount->text().toInt();
-    GetFileEntropyGraph(ui->editPath->text(), blockSize, points, pointCount);
-    AddGraph(ui->graphicsView->scene(), _rect, points, QColor(ui->editColor->text()), _size, _yMin, _yMax);
+    ui->entropyView->GraphFile(ui->editPath->text(), blockSize, pointCount, QColor(ui->editColor->text()));
 
     nextColor();
 }

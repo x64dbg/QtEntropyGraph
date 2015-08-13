@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+    QEntropyView.cpp
 
 HEADERS  += MainWindow.h \
-    Entropy.h
+    Entropy.h \
+    QEntropyView.h
 
 FORMS    += MainWindow.ui
