@@ -50,8 +50,6 @@ public:
         points.clear();
         if(dataSize < pointCount)
             return;
-        if(dataSize < pointCount)
-            return;
         if(dataSize % pointCount != 0)
             pointCount += dataSize % pointCount;
 

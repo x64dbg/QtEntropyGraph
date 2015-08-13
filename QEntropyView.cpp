@@ -64,17 +64,16 @@ void QEntropyView::GraphFile(const QString & fileName, int blockSize, int pointC
     QByteArray fileData = file.readAll();
     file.close();
 
-    unsigned char* data = (unsigned char*)fileData.constData();
-    int dataSize = fileData.size();
-    if(blockSize > dataSize)
-        blockSize = dataSize;
-
-    GraphMemory(data, dataSize, blockSize, pointCount, color);
+    GraphMemory((unsigned char*)fileData.constData(), fileData.size(), blockSize, pointCount, color);
 }
 
-void QEntropyView::GraphMemory(unsigned char* data, int dataSize, int blockSize, int pointCount, QColor color)
+void QEntropyView::GraphMemory(const unsigned char* data, int dataSize, int blockSize, int pointCount, QColor color)
 {
     std::vector<double> points;
+    if(dataSize < blockSize)
+        blockSize = dataSize;
+    if(dataSize < pointCount)
+        pointCount = dataSize;
     Entropy::MeasurePoints(data, dataSize, blockSize, points, pointCount);
     AddGraph(points, color);
 }

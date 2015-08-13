@@ -12,7 +12,7 @@ public:
     void InitializeGraph(int penSize = 1);
     void AddGraph(const std::vector<double> & points, QColor color = Qt::black);
     void GraphFile(const QString & fileName, int blockSize, int pointCount, QColor = Qt::black);
-    void GraphMemory(unsigned char* data, int dataSize, int blockSize, int pointCount, QColor = Qt::black);
+    void GraphMemory(const unsigned char* data, int dataSize, int blockSize, int pointCount, QColor = Qt::black);
 
 private:
     QGraphicsScene* mScene;
